@@ -13,6 +13,8 @@
         <module>auth</module>
         <module>social</module>
         <module>market</module>
+        <module>baseservices</module>
+        <module>parentpom</module>
     </modules>
 
 </project>

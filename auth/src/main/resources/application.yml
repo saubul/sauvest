@@ -1,0 +1,26 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: sauvest-auth
+  datasource:
+    url: jdbc:postgresql://localhost:5450/sauvestdb?currentSchema=auth
+    username: auth
+    password: auth
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: auth
+  liquibase:
+    change-log: classpath:db/changelog/auth-cumulative.xml
+    enabled: true
+    default-schema: auth
+
+jwt:
+  expiration-time: 600s
+  secret: secret

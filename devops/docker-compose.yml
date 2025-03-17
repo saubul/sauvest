@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  sauvest-postgres:
+    image: postgres:17.4
+    container_name: sauvest-postgres
+    ports:
+      - "5450:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01.sql
+    networks:
+      - postgres
+
+  sauvest-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_container
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=miraxle@yandex.ru
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    depends_on:
+      - sauvest-postgres
+    ports:
+      - "5451:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+
+networks:
+  postgres:
+    driver: bridge

@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: sauvest-social
+  datasource:
+    url: jdbc:postgresql://localhost:5450/sauvestdb?currentSchema=social
+    username: social
+    password: social
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        default_schema: social
+    hibernate:
+      ddl-auto: validate

@@ -11,12 +11,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.otus.auth.config.properties.SauvestProperties;
 import ru.otus.auth.service.UserService;
 
 import java.util.Arrays;
@@ -33,6 +33,8 @@ public class WebSecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final SauvestProperties sauvestProperties;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -41,8 +43,12 @@ public class WebSecurityConfiguration {
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(daoAuthenticationProvider())
                 .formLogin(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/api/v1/" + sauvestProperties.getApplicationName() + "/**",
+                                        "/" + sauvestProperties.getApplicationName() + "/api-docs/**",
+                                        "/" + sauvestProperties.getApplicationName() + "/swagger-ui/**")
+                                .permitAll()
+                                .anyRequest().authenticated())
                 .build();
     }
 

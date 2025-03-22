@@ -1,8 +1,12 @@
+sauvest:
+  applicationName: sauvest-auth
+
 server:
   port: 8090
+
 spring:
   application:
-    name: sauvest-auth
+    name: ${sauvest.applicationName}
   datasource:
     url: jdbc:postgresql://localhost:5450/sauvestdb?currentSchema=auth
     username: auth
@@ -21,6 +25,14 @@ spring:
     enabled: true
     default-schema: auth
 
+springdoc:
+  api-docs:
+    path: /${sauvest.applicationName}/api-docs
+  swagger-ui:
+    url: /${sauvest.applicationName}/api-docs
+    path: /${sauvest.applicationName}/swagger-ui.html
+
 jwt:
   expiration-time: 600s
   secret: secret
+

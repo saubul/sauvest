@@ -8,7 +8,7 @@
         <groupId>ru.otus</groupId>
         <artifactId>parentpom</artifactId>
         <version>SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../parentpom/pom.xml</relativePath>
     </parent>
 
     <artifactId>auth</artifactId>

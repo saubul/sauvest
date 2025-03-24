@@ -13,8 +13,8 @@ import lombok.*;
 public class Role {
 
     @Id
-    @SequenceGenerator(name = "role_id_seq", sequenceName = "role_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
+    @SequenceGenerator(name = "roles_id_seq", sequenceName = "roles_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_id_seq")
     private Long id;
 
     @Enumerated(EnumType.STRING)

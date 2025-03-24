@@ -13,6 +13,14 @@ spring:
     change-log: classpath:db/changelog/auth-cumulative.xml
     enabled: true
 
+server:
+  port: 8090
+grpc:
+  server:
+    port: 9090
+    security:
+      enabled: false
+
 jwt:
   expiration-time: 600s
   secret: secret

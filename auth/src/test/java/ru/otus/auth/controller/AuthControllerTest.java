@@ -14,10 +14,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.auth.config.ApplicationTestConfig;
-import ru.otus.auth.config.properties.SauvestProperties;
 import ru.otus.auth.dto.TokenResponseDto;
 import ru.otus.auth.dto.UserDto;
 import ru.otus.auth.service.AuthService;
+import ru.otus.baseservices.properties.SauvestProperties;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,7 +43,7 @@ class AuthControllerTest {
     void registrate() throws Exception {
         UserDto userDto = UserDto.builder().username("admin").password("admin").build();
         mockMvc.perform(
-                post("/api/v1/" + sauvestProperties.getApplicationName() + "/registrate")
+                post("/api/v1/" + sauvestProperties.getApplicationName() + "/auth/registrate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto))
         ).andExpect(status().isOk());
@@ -54,7 +54,7 @@ class AuthControllerTest {
         UserDto userDto = UserDto.builder().username("admin").password("admin").build();
         Mockito.when(authService.authenticate(userDto)).thenReturn(TokenResponseDto.builder().build());
         mockMvc.perform(
-                post("/api/v1/" + sauvestProperties.getApplicationName() + "/token")
+                post("/api/v1/" + sauvestProperties.getApplicationName() + "/auth/token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDto))
         ).andExpect(status().isOk());
@@ -64,7 +64,7 @@ class AuthControllerTest {
     void refreshToken() throws Exception {
         Mockito.when(authService.refreshToken("Bearer ")).thenReturn(TokenResponseDto.builder().build());
         mockMvc.perform(
-                post("/api/v1/" + sauvestProperties.getApplicationName() + "/token/refresh")
+                post("/api/v1/" + sauvestProperties.getApplicationName() + "/auth/token/refresh")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer ")
         ).andExpect(status().isOk());
     }

@@ -14,11 +14,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.otus.auth.config.properties.JWTProperties;
 import ru.otus.auth.dto.TokenResponseDto;
 import ru.otus.auth.dto.UserDto;
 import ru.otus.auth.exception.SauvestAuthException;
 import ru.otus.auth.util.JwtUtilService;
+import ru.otus.baseservices.properties.JWTProperties;
 
 import java.util.Date;
 

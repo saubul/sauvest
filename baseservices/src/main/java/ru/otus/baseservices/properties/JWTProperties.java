@@ -1,4 +1,4 @@
-package ru.otus.auth.config.properties;
+package ru.otus.baseservices.properties;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

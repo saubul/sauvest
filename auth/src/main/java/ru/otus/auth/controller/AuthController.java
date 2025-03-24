@@ -9,7 +9,7 @@ import ru.otus.auth.dto.UserDto;
 import ru.otus.auth.service.AuthService;
 
 @RestController
-@RequestMapping("/api/v1/${sauvest.applicationName}")
+@RequestMapping("/api/v1/${sauvest.applicationName}/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

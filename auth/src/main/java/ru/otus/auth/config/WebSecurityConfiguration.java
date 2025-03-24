@@ -16,8 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.otus.auth.config.properties.SauvestProperties;
 import ru.otus.auth.service.UserService;
+import ru.otus.baseservices.properties.SauvestProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +37,7 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        String applicationName = sauvestProperties.getApplicationName();
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
@@ -44,9 +45,11 @@ public class WebSecurityConfiguration {
                 .authenticationProvider(daoAuthenticationProvider())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/v1/" + sauvestProperties.getApplicationName() + "/**",
-                                        "/" + sauvestProperties.getApplicationName() + "/api-docs/**",
-                                        "/" + sauvestProperties.getApplicationName() + "/swagger-ui/**")
+                        auth.requestMatchers(
+                                "/api/v1/" + applicationName + "/auth/**",
+                                        "/" + applicationName + "/api-docs/**",
+                                        "/" + applicationName + "/swagger-ui/**"
+                                )
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .build();

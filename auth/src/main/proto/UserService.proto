@@ -1,0 +1,14 @@
+syntax = "proto3";
+package ru.otus.grpc;
+
+message UserRegistrationRequest {
+  string username = 1;
+}
+
+message UserRegistrationResponse {
+  bool isSuccess = 1;
+}
+
+service UserService {
+  rpc registrateUser(UserRegistrationRequest) returns (UserRegistrationResponse);
+}

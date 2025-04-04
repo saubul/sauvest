@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="auth-2025_03_24-00-create-table-users.xml" relativeToChangelogFile="true"/>
+    <include file="auth-2025_03_24-01-create-table-roles.xml" relativeToChangelogFile="true"/>
+    <include file="auth-2025_03_24-02-create-table-users_roles.xml" relativeToChangelogFile="true"/>
+    <include file="auth-2025_03_24-03-insert-roles.xml" relativeToChangelogFile="true"/>
+    <include file="auth-2025_03_29-03-create-table-verification_tokens.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

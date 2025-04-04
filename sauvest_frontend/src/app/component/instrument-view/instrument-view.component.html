@@ -1,0 +1,211 @@
+<div class="grid grid-cols-6 mt-20 md:mx-24 lg:mx-96 gap-2 md">
+    <app-navigation-bar class="bg-white rounded-md p-2 col-start-1 col-end-2"></app-navigation-bar>
+    <div *ngIf="loading" class="bg-white rounded-md p-2 col-start-2 col-end-7 flex space-x-4 items-center justify-between w-full ">
+        <div class="flex w-full justify-center p-2">
+            <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+              style="border-top-color: gray;" 
+              viewBox="0 0 24 24">
+            </svg>
+          </div>
+    </div>
+    <div *ngIf="!loading" class="bg-white rounded-md py-2 px-8 col-start-2 col-end-7 h-full flex flex-col">
+        <div class = "flex flex-col">
+            <div> 
+                <label class = "font-semibold">Название: </label> {{instrument?.name}} 
+            </div>
+            <div> 
+                <label class = "font-semibold">Тикер: </label> {{instrument?.ticker}} 
+            </div>
+            <div> 
+                <label class = "font-semibold">FIGI: </label> {{instrument?.figi}} 
+            </div>
+            <div> 
+                <label class = "font-semibold">Биржа: </label> {{instrument?.classCode}} 
+            </div>
+            <div> 
+                <label class = "font-semibold">Тип инструмента: </label> {{instrument?.instrumentType}} 
+            </div>
+        </div>
+        <igx-financial-chart class = "flex h-[600px] my-4 border"
+            [dataSource]="stocksData"
+            isToolbarVisible="true"
+            chartType="Candle"
+            yAxisLabelLocation="OutsideLeft"
+            yAxisMode="Numeric"
+            yAxisTitleLeftMargin="0"
+            yAxisTitleRightMargin="5"
+            yAxisLabelLeftMargin="5"
+            zoomSliderType="None">
+        </igx-financial-chart>
+        <div class = "flex w-full justify-end">
+            <button class = "mx-2 px-1 border bg-gray-100 hover:bg-gray-200" (click)="getMarketData('CANDLE_INTERVAL_5_MIN')">
+                5M
+            </button>
+            <button class = "mx-2 px-1 border bg-gray-100 hover:bg-gray-200" (click)="getMarketData('CANDLE_INTERVAL_HOUR')">
+                H
+            </button>
+            <button class = "ml-2 px-1 border bg-gray-100 hover:bg-gray-200" (click)="getMarketData('CANDLE_INTERVAL_4_HOUR')">
+                4H
+            </button>
+            <button class = "ml-2 px-1 border bg-gray-100 hover:bg-gray-200" (click)="getMarketData('CANDLE_INTERVAL_DAY')">
+                D
+            </button>
+        </div>
+        <hr class = "my-4">
+        <span class = "font-semibold text-xl py-2">Технический анализ</span>
+        <div class = "border rounded-md p-4">
+
+          <div *ngIf="!technicalAnalysisDone">
+            <form [formGroup]="technicalAnalysisExecuteFormGroup" (ngSubmit)="technicalAnalysisExecute()" class = "flex flex-col">
+              <div class = "flex flex-row items-center">
+                <span class = "font-semibold">Дата: </span>
+                <mat-form-field appearance="fill" class = "flex ml-2" style="zoom: 0.85;">
+                  <mat-label>Выбрать дату</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName = "date">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class = "flex justify-end">
+                <button class="bg-gray-800 hover:bg-gray-600 text-white font-semibold text-sm py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                  Выполнить
+                </button>
+              </div>
+            </form>
+          </div>
+          
+        </div>
+        <hr class = "my-4"/>
+        <span class = "py-2 font-semibold text-xl">История технического анализа</span>
+        <div class = "w-full mt-2 bg-white border rounded-md p-1" *ngFor="let instrumentAnalysisHistory of 
+                                            instrumentAnalysisHistoryArray | paginate: {itemsPerPage: 3, currentPage: p }; index as i">
+          <div  class = "mx-auto justify-center bg-white p-1">
+            <div class = "flex w-full justify-between bg-white rounded p-2">
+              <div class = "flex items-center border rounded-full py-1 px-3">
+                {{(p - 1) * 3 + (i + 1)}}
+              </div>
+              <div class = "flex items-center text-sm">
+                {{instrumentAnalysisHistory?.date | date: 'dd.MM.yyyy hh:mm:ss'}}
+              </div>
+            </div>
+            <hr class = "mb-2"/>
+            <div class = "flex w-full flex-col justify-start">
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">Дата технического анализа:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.dateAnalysis | date: 'dd.MM.yyyy'}}</span>
+              </div>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">EMA:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.ema | number: '1.0-2'}}</span>
+              </div>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">RSI:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.rsi | number: '1.0-2'}}</span>
+              </div>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">MACD:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.macd | number: '1.0-2'}}</span>
+              </div>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">Stochastic:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.stochastic | number: '1-2.0-2'}}%</span>
+              </div>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">SAR:</span>
+                <span>&nbsp;{{instrumentAnalysisHistory.sar | number: '1.0-2'}}</span>
+              </div>
+              <hr class = ""/>
+              <div class = "bg-white p-1 flex justify-start items-center">
+                <span class = "font-semibold">Рекомендация:</span>
+                <span *ngIf="instrumentAnalysisHistory.recomendation === 0" class = "font-medium mx-2 p-1 border rounded-md bg-orange-200 text-orange-500 items-center">
+                  Держать
+                </span>  
+                <span *ngIf="instrumentAnalysisHistory.recomendation === -1" class = "mx-2 p-1 border rounded-md bg-red-200 text-red-600 items-center">
+                  Продавать
+                </span>  
+                <span *ngIf="instrumentAnalysisHistory.recomendation === 1" class = "mx-2 p-1 border rounded-md bg-green-300 text-green-600 items-center">
+                  Покупать
+                </span>  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span  *ngIf="instrumentAnalysisHistoryArray.length === 0" class = "flex w-full">
+          Технический анализ ещё не выполнялся.
+        </span>
+        <div  *ngIf="instrumentAnalysisHistoryArray.length > 5" class = "flex w-full justify-end my-2">
+          <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
+        </div>
+        <hr *ngIf="posts?.length != 0" class = "my-4"/>
+        <span class = "py-2 font-semibold text-xl">Связанные публикации</span>
+        <div class = "w-full mt-2 bg-white border rounded-md p-1" *ngFor="let post of posts | paginate: {id: 'postsPagination', itemsPerPage: 3, currentPage: p2 }">
+            <div  class = "mx-auto justify-center bg-white p-1">
+              <div class="w-full bg-white rounded p-2">
+                <div class = "border-b-2 flex justify-between items-center">
+                  <a class = "flex justify-between w-full py-1" routerLink="/user/{{post.username}}/profile">
+                    <div class = "flex items-center font-semibold">
+                      <img [src]="post.userImg" alt="image" class="object-cover h-7 w-7 mr-2 rounded-full"/>
+                      {{post?.name}} {{post?.surname}} 
+                    </div>
+                    <div class = "flex items-center text-sm">
+                      {{post?.creationDateTime | date: 'dd.MM.yyyy HH:mm'}}
+                    </div>
+                  </a>
+                </div>
+                <div class = "py-2 pb-2">
+                  <a role="button" (click)="goToPost(post.id)">
+                    <p [innerHtml]="post.content"></p>
+                  </a>
+                </div>
+                <div>
+                  <span *ngIf="post.instruments.length != 0" class = "font-semibold mb-2"> Инструменты: </span>
+                  <div *ngFor="let instrument of post.instruments">
+
+                      <a *ngIf="instrument.instrumentType === 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: true}" class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                          <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                          <span class = "pl-2"> {{instrument.name}} </span>
+                      </a>
+                      <a *ngIf="instrument.instrumentType !== 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: false}"  class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                      <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                      <span class = "pl-2"> {{instrument.name}} </span>
+                  </a>
+                  </div>
+                </div>
+                <div class = "flex justify-between items-center">
+                  <div class = "flex ">
+                    <div class = "rounded mr-1 px-1 bg-gray-100 hover:bg-gray-200">
+                        <a class = "px-1" role="button" routerLink="/post/{{post.id}}">
+                            <fa-icon class = "text-gray-400" [icon]="commentsIcon"></fa-icon>
+                        </a>
+                    </div>
+                    <div class = "flex">
+                        <button *ngIf="!post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-gray-100 hover:bg-gray-200" (click)="votePost(post.id)">
+                            <fa-icon [icon]="heartIcon" class = "text-gray-400 "></fa-icon>
+                            {{post.voteCount}}
+                        </button>
+                        <button *ngIf="post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-blue-100 hover:bg-blue-200" (click)="votePost(post.id)">
+                            <fa-icon [icon]="heartIcon" class = "text-blue-400 "></fa-icon>
+                            {{post.voteCount}}
+                        </button>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="bg-gray-800 hover:bg-gray-600 text-white font-semibold text-sm py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                            (click)="goToPost(post.id)">
+                      Читать
+                    </button>
+                  </div>
+                </div>
+              </div>
+        
+            </div>
+        </div>
+        <div *ngIf="instrumentAnalysisHistoryArray.length > 5" class = "flex w-full justify-end my-2">
+          <pagination-controls id="postsPagination" class="rounded-md" previousLabel="" nextLabel="" (pageChange)="p2 = $event"></pagination-controls>
+        </div>
+    </div>
+</div>

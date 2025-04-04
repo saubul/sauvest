@@ -1,0 +1,5 @@
+<app-navigation *ngIf="!isMainPage.getValue()"></app-navigation>
+
+<div (click)="closeMenu()">
+    <router-outlet></router-outlet>
+</div>

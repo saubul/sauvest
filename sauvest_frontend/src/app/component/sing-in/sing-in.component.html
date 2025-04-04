@@ -1,0 +1,61 @@
+<div  class = "max-w-lg container mx-auto mt-72 justify-center">
+
+    <div class="w-full bg-gray-800 drop-shadow-lg rounded px-8 pt-6 pb-8">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-white pb-4">
+                Войти
+        </h1>
+        <form ngNativeValidate [formGroup]="signInFormGroup" (ngSubmit)="signIn()">
+          <div class="mb-4">
+            <label class="block text-white text-sm font-semibold mb-2" for="username">
+              Логин
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-text" 
+                   id="username" 
+                   type="text" 
+                   placeholder="Логин"
+                   required
+                   autofocus
+                   formControlName="username"/>
+            <span *ngIf="!signInFormGroup.get('username')?.valid && signInFormGroup.get('username')?.touched">
+              <p class = "pt-2 fadeInText" style="font-size:small; color: white"> 
+                  Пожалуйста, введите логин
+              </p>
+            </span>
+          </div>
+          <div class="mb-6">
+            <label class="block text-white text-sm font-semibold mb-2" for="password">
+              Пароль
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
+                   id = "password" 
+                   type = "password" 
+                   placeholder = "••••••••"
+                   name = "password"
+                   required
+                   formControlName="password"/>
+            <span *ngIf="!signInFormGroup.get('password')?.valid && signInFormGroup.get('password')?.touched">
+              <p  style="font-size:small; color: white" class = "fadeInText">
+                Пожалуйста, введите пароль
+              </p>
+            </span>
+            <div *ngIf="this.isError" class = "fadeInText"> 
+              <p style="color: white">Ошибка авторизации. Пожалуйста проверьте введенные данные.</p>
+            </div>
+            <div *ngIf="!this.isEnabled" class = "fadeInText"> 
+              <p style="color: white">Для входа в аккаунт необходимо подтвердить пользователя.</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <button class="bg-white hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+              Войти
+            </button>
+            <a class="inline-block align-baseline font-semibold text-sm text-white hover:text-gray-200" routerLink="/signUp">
+              Еще не зарегестрированы?
+            </a>
+          </div>
+          <div *ngIf="this.registerSuccessMessage && this.registerSuccessMessage.length > 0">
+              <p class = "mt-4 italic text-sm px-2 text-white">{{registerSuccessMessage}}</p>
+          </div>
+        </form>
+      </div>
+</div>

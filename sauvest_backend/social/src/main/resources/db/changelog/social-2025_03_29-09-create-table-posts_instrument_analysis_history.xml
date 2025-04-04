@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-instrument_analysis_history" author="nrr">
+        <createTable tableName="instrument_analysis_history">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creation_date_time" type="timestamp"/>
+            <column name="instrument_id" type="bigint">
+                <constraints referencedTableName="instruments"
+                             referencedColumnNames="id"
+                             foreignKeyName="instrument_id_fk"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="users_id_fk"/>
+            </column>
+            <column name="recommendation" type="real"/>
+            <column name="ema" type="real"/>
+            <column name="rsi" type="real"/>
+            <column name="macd" type="real"/>
+            <column name="analysis_date" type="timestamp"/>
+            <column name="stohastic" type="real"/>
+            <column name="parabolic" type="real"/>
+        </createTable>
+
+        <createSequence
+                sequenceName="instrument_analysis_history_id_seq"
+                startValue="1"
+                incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

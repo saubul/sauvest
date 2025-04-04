@@ -1,0 +1,33 @@
+sauvest:
+  applicationName: sauvest-auth
+
+spring:
+  application:
+    name: ${sauvest.applicationName}
+  datasource:
+    url: jdbc:h2:mem:testdb
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/auth-cumulative.xml
+    enabled: true
+  mail:
+    username: test
+
+mail_server: test
+
+server:
+  port: 8090
+grpc:
+  server:
+    port: 0
+    security:
+      enabled: false
+
+jwt:
+  expiration-time: 600s
+  secret: secret
+
+
+

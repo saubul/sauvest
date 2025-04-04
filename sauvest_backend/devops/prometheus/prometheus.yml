@@ -1,0 +1,16 @@
+scrape_configs:
+  - job_name: 'sauvest-auth'
+    metrics_path: '/sauvest-auth/monitor/prometheus'
+    scrape_interval: 15s # This can be adjusted based on our needs
+    static_configs:
+      - targets: ['sauvest-auth:8080']
+  - job_name: 'sauvest-social'
+    metrics_path: '/sauvest-social/monitor/prometheus'
+    scrape_interval: 15s # This can be adjusted based on our needs
+    static_configs:
+      - targets: ['sauvest-social:8080']
+  - job_name: 'sauvest-market'
+    metrics_path: '/sauvest-market/monitor/prometheus'
+    scrape_interval: 15s # This can be adjusted based on our needs
+    static_configs:
+      - targets: ['sauvest-market:8080']

@@ -1,0 +1,71 @@
+<nav class = "absolute top-0 right-0 left-0 h-[60px] px-3 flex justify-between items-center text-white bg-black">
+    <span class = "flex items-center">
+        <img (click)="routeToMain()" [src]="img_src + 'icon.jpg'" alt="image" class="object-cover h-11 w-11 mx-2 cursor-pointer" />
+        <button (click)="routeToMain()" class="py-1 text-lg my-1" style = "font-size: 22px;">SAUVEST</button>
+    </span>
+
+    <div>
+        <div>
+            <div class = "flex items-center">
+              <button type="button" class="" (click)="showMenu()">
+                <img *ngIf="!loading" [src]="profile_img_src" alt="image" class="object-cover h-7 w-7 mx-2 rounded-full"/>
+              </button>
+            </div>
+          
+            
+            <div *ngIf="isShowMenu" class="absolute right-10 z-10 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" 
+                  role="menu" 
+                  aria-orientation="vertical" 
+                  aria-labelledby="menu-button"
+                  >
+              
+              <div *ngIf="!isLoggedIn" class="py-1" role="none">
+                <a routerLink="/signIn" 
+                      class="text-gray-700 block px-4 py-2 text-sm bg-white hover:bg-gray-50 " 
+                      role="menuitem" 
+                      id="menu-item-0" 
+                      (click)="closeMenu()">
+                   Войти
+                </a>
+
+                <a routerLink="/signUp" 
+                      class="text-gray-700 block px-4 py-2 text-sm bg-white hover:bg-gray-50 " 
+                      role="menuitem" 
+                      id="menu-item-0" 
+                      (click)="closeMenu()">
+                   Регистрация
+                </a>
+              </div>
+
+              <div *ngIf="isLoggedIn" class="py-1" role="none">
+                <div class = "font-semibold text-black px-4 py-2 text-sm">@{{username}}</div>
+                <hr/>
+                <a routerLink="/user/{{username}}/profile" 
+                   class="text-gray-700 block px-4 py-2 text-sm bg-white hover:bg-gray-50 " 
+                   role="menuitem" 
+                   id="menu-item-0" 
+                   (click)="nagivateToUserProfile()">
+                   Профиль
+                </a>
+
+                <a routerLink="" 
+                   class="text-gray-700 block px-4 py-2 text-sm bg-white hover:bg-gray-50" 
+                   role="menuitem" 
+                   id="menu-item-1"
+                   (click)="closeMenu()">
+                   Поддержка
+                </a>
+                <hr/>
+                <button type="submit" 
+                        class="text-gray-700 block w-full px-4 py-2 text-left text-sm bg-white hover:bg-gray-50" 
+                        role="menuitem" 
+                        id="menu-item-3"
+                        (click)="signOut()">
+                    Выйти
+                </button>
+              </div>
+            </div>
+          </div>
+
+    </div>
+</nav>

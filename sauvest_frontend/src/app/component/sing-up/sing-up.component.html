@@ -1,0 +1,98 @@
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div
+        class="w-full bg-gray-800 rounded-lg shadow dark:border md:mt-0 max-w-xl xl:p-0 flex">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8 w-full">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
+                Создать аккаунт
+            </h1>
+            <form class="space-y-2 md:space-y-4" [formGroup]="signUpFormGroup" (ngSubmit)="signUp()">
+                <div class="flex justify-between">
+                    <div class = "flex flex-col w-full pr-2">
+                        <label for="username" class="block mb-2 text-sm font-medium text-white">Имя
+                            пользователя</label>
+                        <input type="text" name="username" id="username"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Имя пользователя"
+                            formControlName="username" />
+                        <span *ngIf="!signUpFormGroup.get('username')?.valid && signUpFormGroup.get('username')?.touched">
+                            <p class="pt-2" style="font-size:small; color: white;">
+                                Пожалуйста, введите имя пользователя
+                            </p>
+                        </span>
+                    </div>
+                    <div class = "flex flex-col w-full">
+                        <label for="email"
+                            class="block mb-2 text-sm font-medium text-white">Почта</label>
+                        <input id="email"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="name@company.com" formControlName="email" />
+                        <span *ngIf="!signUpFormGroup.get('email')?.valid && signUpFormGroup.get('email')?.touched">
+                            <p class="pt-2" style="font-size:small; color: white">
+                                Пожалуйста, введите почту
+                            </p>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <div class = "flex flex-col w-full pr-2">
+                        <label for="password"
+                            class="block mb-2 text-sm font-medium text-white">Пароль</label>
+                        <input id="password" placeholder="••••••••"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                            formControlName="password" 
+                            type="password"/>
+                        <span *ngIf="!signUpFormGroup.get('password')?.valid && signUpFormGroup.get('password')?.touched">
+                            <p class="pt-2" style="font-size:small; color:white">
+                                Пожалуйста, введите корректный пароль
+                            </p>
+                        </span>
+                    </div>
+                    <div class="flex flex-col w-full">
+                        <label for="confirm-password"
+                            class="block mb-2 text-sm font-medium text-white">Повторите
+                            пароль</label>
+                        <input id="confirm-password" placeholder="••••••••"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                            formControlName="repeatPassword"
+                            type="password" />
+                        <span
+                            *ngIf="!signUpFormGroup.get('repeatPassword')?.valid && signUpFormGroup.get('repeatPassword')?.touched">
+                            <p class="pt-2" style="font-size:small; color: white;">
+                                Пожалуйста, повторите пароль
+                            </p>
+                        </span>
+                        <span *ngIf="!(signUpFormGroup.get('repeatPassword')?.value===signUpFormGroup.get('password')?.value)">
+                            <p class="pt-2" style="font-size:small; color: white;">
+                                Пароли не совпадают
+                            </p>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="ssoToken"
+                        class="block mb-2 text-sm font-medium text-white">SSOToken</label>
+                    <input id="ssoToken" placeholder="••••••••"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
+                        formControlName="ssoToken"
+                        type="password" />
+                    <a routerLink="/ssoTokenInfo" class=" pt-1 text-xs hover:underline text-gray-400">Что такое SSOToken?</a>
+                </div>
+
+                <div>
+                    <span *ngIf="fieldsError">
+                        <p class="pt-2" style="font-size:small; color: white">
+                            Пожалуйста, введите все поля
+                        </p>
+                    </span>
+                    <button type="submit"
+                        class="w-full bg-white hover:bg-gray-200 text-black font-semibold py-2 px-4 mt-2 rounded focus:outline-none focus:shadow-outline">Создать
+                        аккаунт</button>
+                    <p class="text-sm font-light text-gray-200 pt-2">
+                        Уже есть аккаунт? <a routerLink="/signIn"
+                            class="font-medium text-primary-600 hover:underline text-white">Войти</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

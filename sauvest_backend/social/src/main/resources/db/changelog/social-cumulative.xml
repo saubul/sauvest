@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="social-2025_03_24-00-create-table-users.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_24-01-create-table-posts.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-00-create-table-comments.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-01-create-table-subscriptions.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-02-create-table-votes.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-04-create-table-chats.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-05-create-table-chat_messages.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-06-create-table-users_chats.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-07-create-table-instruments.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-08-create-table-posts_instruments.xml" relativeToChangelogFile="true"/>
+    <include file="social-2025_03_29-09-create-table-posts_instrument_analysis_history.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

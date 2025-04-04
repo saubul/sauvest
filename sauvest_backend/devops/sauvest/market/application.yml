@@ -1,0 +1,36 @@
+sauvest:
+  applicationName: sauvest-market
+
+grpc:
+  server:
+    port: 9082
+    security:
+      enabled: false
+
+spring:
+  application:
+    name: ${sauvest.applicationName}
+
+springdoc:
+  api-docs:
+    path: /${sauvest.applicationName}/api-docs
+  swagger-ui:
+    url: /${sauvest.applicationName}/api-docs
+    path: /${sauvest.applicationName}/swagger-ui.html
+
+jwt:
+  expiration-time: 6000s
+  secret: secret
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /${sauvest.applicationName}/monitor
+

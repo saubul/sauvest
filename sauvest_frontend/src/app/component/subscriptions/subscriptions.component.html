@@ -1,0 +1,63 @@
+<div *ngIf="loading" class="flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+    <div class="flex w-full justify-center p-2">
+        <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+          style="border-top-color: gray;" 
+          viewBox="0 0 24 24">
+        </svg>
+      </div>
+</div>
+<div *ngIf="!loading" class="space-y-4">
+    <form class="my-2" [formGroup]="findSubscriptionsFormGroup" (ngSubmit)="findSubscriptionsByUser()">
+        <label for="default-search"
+            class="mb-2 text-sm font-medium text-grway-900 sr-only dark:text-gray-300">Поиск</label>
+        <div class="relative">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input type="search" id="default-search"
+                class="focus:outline-none w-full block p-3 pl-10 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                placeholder="Поиск по фамилии" formControlName="username">
+            <button type="submit"
+                class="text-white absolute right-2 bottom-2 bg-gray-800 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Поиск
+            </button>
+        </div>
+    </form>
+    <div *ngIf="!subscribedOnUsers || subscribedOnUsers?.length === 0">
+        У вас еще нет подписок.
+        <ng-container *ngFor="let user of allUsers">
+            <div class="flex flex-row rounded hover:bg-gray-100 cursor-pointer p-1" (click)="goToUserProfile(user.username)">
+                <img [src]="user.imgPath" class="rounded-full w-36 h-36 ml-4 border p-1" />
+                <div class="flex flex-row w-3/4 items-center">
+                    <div>
+                        <p class="ml-4 font-sans text-2xl font-semibold">{{user?.surname}} {{user?.name}}</p>
+                        <button class=" ml-3 mt-1 bg-gray-200 font-sans hover:bg-gray-300 px-2 py-1 rounded-md font-semibold"
+                                (click)="createChatWith(user.username)">
+                            Написать
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+        </ng-container>
+    </div>
+    <ng-container *ngFor="let user of subscribedOnUsers">
+        <div class="flex flex-row rounded hover:bg-gray-100 cursor-pointer p-1" (click)="goToUserProfile(user.username)">
+            <img [src]="user.imgPath" class="rounded-full w-36 h-36 ml-4 border p-1" />
+            <div class="flex flex-row w-3/4 items-center">
+                <div>
+                    <p class="ml-4 font-sans text-2xl font-semibold">{{user?.surname}} {{user?.name}}</p>
+                    <button class=" ml-3 mt-1 bg-gray-200 font-sans hover:bg-gray-300 px-2 py-1 rounded-md font-semibold"
+                            (click)="createChatWith(user.username)">
+                        Написать
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </ng-container>
+</div>

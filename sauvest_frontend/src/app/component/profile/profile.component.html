@@ -1,0 +1,102 @@
+
+<div *ngIf="loading" class="flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+  <div class="flex w-full justify-center p-2">
+    <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+      style="border-top-color: gray;" 
+      viewBox="0 0 24 24">
+    </svg>
+  </div>
+</div>
+<div *ngIf="!loading" class="flex flex-col">
+    <div class = "flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+        <img [src]="profile_img_src" class = "rounded-full w-36 h-36 ml-4 border p-1 object-cover"/>
+        <div class="flex flex-col w-3/4 items-start">
+            <p class = "font-sans text-2xl font-semibold">{{userModel?.surname}} {{userModel?.name}}</p>
+            <button *ngIf="!isCurrUser && !isSubscribed" 
+                    class = "py-1 px-2 mt-2 border rounded bg-white hover:bg-gray-50 focus:hover:bg-gray-100 text-black font-semibold text-sm"
+                    (click)="subscribe()">
+                Подписаться
+            </button>
+            <button *ngIf="!isCurrUser && isSubscribed" 
+                    class = "py-1 px-2 mt-2 border rounded bg-black hover:bg-gray-700 focus:hover:bg-gray-100 text-white font-semibold text-sm"
+                    (click)="unsubscribe()">
+                Отписаться
+            </button>
+        </div>
+        <a *ngIf="isCurrUser" routerLink="/user/{{userModel?.username}}/settings" class="p-2 font-sans text-sm border rounded-md bg-gray-100 hover:bg-gray-50 mb-28" >
+            <img src="/assets/img/settings.png" class = "w-4 h-4">
+        </a>
+    </div>
+    <div class = "w-full bg-white rounded-md mt-4 p-2">
+        <p class="p-2 font-semibold">Публикации</p>
+        <div class = "px-2" *ngIf="posts$.length === 0">
+            Пока нет публикаций.
+        </div>
+        <div class = "w-full " *ngFor="let post of posts$">
+            <div  class = "mb-4 mx-auto justify-center bg-white p-1 border-l-2">
+        
+              <div class="w-full bg-white rounded p-2">
+                <div class = "border-b-2 flex justify-between items-center">
+                  <a class = "flex justify-between w-full py-1" routerLink="/user/{{post.username}}/profile">
+                    <div class = "flex items-center font-semibold">
+                      <img [src]="post.userImg" alt="image" class="object-cover h-7 w-7 mr-2 rounded-full"/>
+                      {{post?.name}} {{post?.surname}} 
+                    </div>
+                    <div class = "flex items-center text-sm">
+                      {{post?.creationDateTime | date: 'dd.MM.yyyy HH:mm'}}
+                    </div>
+                  </a>
+                </div>
+                <div class = "py-2 pb-2">
+                  <a role="button" (click)="goToPost(post.id)">
+                    <p [innerHtml]="post.content"></p>
+                  </a>
+                </div>
+                <div>
+                  <span *ngIf="post.instruments.length != 0" class = "font-semibold mb-2"> Инструменты: </span>
+                  <div *ngFor="let instrument of post.instruments">
+
+                      <a *ngIf="instrument.instrumentType === 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: true}" class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                          <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                          <span class = "pl-2"> {{instrument.name}} </span>
+                      </a>
+                      <a *ngIf="instrument.instrumentType !== 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: false}"  class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                      <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                      <span class = "pl-2"> {{instrument.name}} </span>
+                  </a>
+                  </div>
+                </div>
+                <div class = "flex justify-between items-center">
+                  <div class = "flex ">
+                    <div class = "rounded mr-1 px-1 bg-gray-100 hover:bg-gray-200">
+                        <a class = "px-1" role="button" routerLink="/post/{{post.id}}">
+                            <fa-icon class = "text-gray-400" [icon]="commentsIcon"></fa-icon>
+                        </a>
+                    </div>
+                    <div class = "flex">
+                        <button *ngIf="!post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-gray-100 hover:bg-gray-200" (click)="votePost(post.id)">
+                            <fa-icon [icon]="heartIcon" class = "text-gray-400 "></fa-icon>
+                            {{post.voteCount}}
+                        </button>
+                        <button *ngIf="post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-blue-100 hover:bg-blue-200" (click)="votePost(post.id)">
+                            <fa-icon [icon]="heartIcon" class = "text-blue-400 "></fa-icon>
+                            {{post.voteCount}}
+                        </button>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="bg-gray-800 hover:bg-gray-600 text-white font-semibold text-sm py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                            (click)="goToPost(post.id)">
+                      Читать
+                    </button>
+                  </div>
+                </div>
+              </div>
+        
+            </div>
+        </div>
+    </div>
+    
+</div>

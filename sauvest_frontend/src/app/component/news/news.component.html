@@ -1,0 +1,176 @@
+<div *ngIf="loading" class="flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+  <div class="flex w-full justify-center p-2">
+    <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+    style="border-top-color: gray;" 
+      viewBox="0 0 24 24">
+    </svg>
+  </div>
+</div>
+<div *ngIf="!loading" class="space-y-4">
+    <form class="mb-1 bg-white p-2 rounded-md" [formGroup]="findNewsFormGroup" (ngSubmit)="findNews()">
+        <label for="default-search"
+            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+        <div class="relative">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input type="search" id="default-search"
+                class="focus:outline-none w-full block p-3 pl-10 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                placeholder="Поиск по тексту" formControlName="content">
+            <button type="submit"
+                class="text-white absolute right-2 bottom-2 bg-gray-800 hover:bg-gray-600 focus:ring-1 focus:ring-black focus:outline-none  font-medium rounded-lg text-sm px-3 py-1">
+                Поиск
+            </button>
+        </div>
+    </form>
+
+    <div class = "flex justify-between w-full">
+      <div class = "w-3/4">
+        <div class="bg-white rounded-md p-2 mb-2">
+          <form class="mb-2 w-full flex flex-col p-2 pl-4 text-md text-gray-900 border rounded-md" 
+                [formGroup]="createPostFormGroup" (ngSubmit)="createPost()">
+                <textarea maxlength="500"
+                    class="mb-2 focus:outline-none block text-md text-gray-900 w-full border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                    placeholder="Что у вас нового?" formControlName="content"></textarea>
+                    <div *ngIf="addedInstruments.length != 0" class = "rounded-md border p-2">
+                      <span *ngIf="addedInstruments.length != 0" class = "font-semibold mb-2"> Инструменты: </span>
+                      <div *ngFor="let instrument of addedInstruments; let i = index">
+
+                          <a *ngIf="instrument.instrumentType === 'SHARE_TYPE_COMMON'"
+                              [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: true}" class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                              <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                              <span class = "pl-2"> {{instrument.name}} </span>
+                          </a>
+                          <a *ngIf="instrument.instrumentType !== 'SHARE_TYPE_COMMON'"
+                              [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: false}"  class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                          <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                          <span class = "pl-2"> {{instrument.name}} </span>
+                          </a>
+                          <hr *ngIf = "i != addedInstruments.length - 1"/>
+                      </div>
+                  </div>
+                    <form class="mb-1 bg-white py-2 rounded-md" [formGroup]="findInstrumentsFormGroup" (ngSubmit)="addInstrument()">
+                      <label for="default-search"
+                          class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+                      <div class="relative">
+                          <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                              <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                                  stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                              </svg>
+                          </div>
+                          <input type="search" id="default-search"
+                              class="focus:outline-none w-full block p-3 pl-10 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                              placeholder="Поиск по FIGI/TICKER" formControlName="content">
+                          <button type="submit"
+                              class="text-white absolute right-2 bottom-2 bg-gray-800 hover:bg-gray-600 focus:ring-1 focus:ring-black focus:outline-none  font-medium rounded-lg text-sm px-3 py-1">
+                              Добавить
+                          </button>
+                      </div>
+                  </form> 
+                <div class="flex justify-end">
+                    <button type="submit"
+                      class="text-white bg-gray-800 hover:bg-gray-600 focus:ring-1 focus:ring-black focus:outline-none  font-medium rounded-lg text-xs p-2">
+                      Опубликовать
+                  </button>
+                </div>
+          </form>
+        </div>
+        
+        <div class = "w-full " *ngFor="let post of posts$">
+            <div  class = "mb-4 mx-auto justify-center bg-white p-1 rounded-md">
+        
+              <div class="w-full bg-white rounded p-2">
+                <div class = "border-b-2 flex justify-between items-center">
+                  <a class = "flex justify-between w-full py-1" routerLink="/user/{{post.username}}/profile">
+                    <div class = "flex items-center font-semibold">
+                      <img [src]="post.userImg" alt="image" class="object-cover h-7 w-7 mr-2 rounded-full"/>
+                      {{post?.name}} {{post?.surname}} 
+                    </div>
+                    <div class = "flex items-center text-sm">
+                      {{post?.creationDateTime | date: 'dd.MM.yyyy HH:mm'}}
+                    </div>
+                  </a>
+                </div>
+                <div class = "py-2 pb-2">
+                  <a role="button" (click)="goToPost(post.id)">
+                    <p [innerHtml]="post.content"></p>
+                  </a>
+                </div>
+                <div>
+                  <span *ngIf="post.instruments.length != 0" class = "font-semibold mb-2"> Инструменты: </span>
+                  <div *ngFor="let instrument of post.instruments">
+
+                      <a *ngIf="instrument.instrumentType === 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: true}" class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                          <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                          <span class = "pl-2"> {{instrument.name}} </span>
+                      </a>
+                      <a *ngIf="instrument.instrumentType !== 'SHARE_TYPE_COMMON'"
+                          [routerLink]="['/instruments/', instrument.figi]" [queryParams]="{isShare: false}"  class = "flex flex-row items-center my-2 hover:bg-gray-200 rounded-md" role="button">
+                      <img [src]="img_src + 'instrument.png'" class="rounded-full w-12 h-12 border p-1 object-contain" /> 
+                      <span class = "pl-2"> {{instrument.name}} </span>
+                  </a>
+                  </div>
+                </div>
+                <div class = "flex justify-between items-center">
+                  <div class = "flex ">
+                    <div class = "rounded mr-1 px-1 bg-gray-100 hover:bg-gray-200">
+                        <a class = "px-1" role="button" routerLink="/post/{{post.id}}">
+                            <fa-icon class = "text-gray-400" [icon]="commentsIcon"></fa-icon>
+                        </a>
+                    </div>
+                    <div class = "flex">
+                        <button  *ngIf="!post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-gray-100 hover:bg-gray-200" (click)="votePost(post.id)">
+                            <fa-icon [icon]="heartIcon" class = "text-gray-400 "></fa-icon>
+                          {{post.voteCount}}
+                        </button>
+                        <button  *ngIf="post.isLikedByCurrentUser" class = "rounded mr-1 px-2 bg-blue-100 hover:bg-blue-200" (click)="votePost(post.id)">
+                          <fa-icon [icon]="heartIcon" class = "text-blue-400 "></fa-icon>
+                        {{post.voteCount}}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="bg-gray-800 hover:bg-gray-600 text-white font-semibold text-sm py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                            (click)="goToPost(post.id)">
+                      Читать
+                    </button>
+                  </div>
+                </div>
+              </div>
+        
+            </div>
+      </div>
+    </div>
+    
+    <div class = "flex w-1/4 bg-white rounded-md p-2 ml-2 mb-4 flex-col">
+      <span class = " font-semibold ">Фильтры</span>
+      <form>
+        <input type="checkbox">
+        <label class = "pl-2">Подписки</label>
+        <form class="mb-1 bg-white py-2 rounded-md" [formGroup]="findPostsByInstrumentFormGroup" (ngSubmit)="findPostsByInstrument()">
+          <label for="default-search"
+              class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+          <div class="relative">
+              <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                      stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  </svg>
+              </div>
+              <input type="search" id="default-search"
+                  class="focus:outline-none w-full block p-3 pl-10 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                  placeholder="Поиск по FIGI/TICKER" formControlName="content">
+          </div>
+      </form> 
+      </form>
+    </div>
+  </div>
+</div>

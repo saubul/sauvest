@@ -1,0 +1,75 @@
+sauvest:
+  applicationName: sauvest-auth
+
+grpc:
+  server:
+    port: -1
+  client:
+    social-service:
+      address: static://localhost:9091
+
+spring:
+  application:
+    name: ${sauvest.applicationName}
+  datasource:
+    url: jdbc:postgresql://postgres:5432/sauvestdb?currentSchema=auth
+    username: auth
+    password: auth
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: auth
+  liquibase:
+    change-log: classpath:db/changelog/auth-cumulative.xml
+    enabled: true
+    default-schema: auth
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: miraxle@yandex.ru
+    password: cytwsivttotuzkod
+    protocol: smtps
+  kafka:
+    bootstrap-servers: kafka-broker-1:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://schema-registry:8081
+
+integrations:
+  kafka:
+    social:
+      topics:
+        user-register: sauvest.auth.user-register
+
+mail_server: localhost:4200
+
+springdoc:
+  api-docs:
+    path: /${sauvest.applicationName}/api-docs
+  swagger-ui:
+    url: /${sauvest.applicationName}/api-docs
+    path: /${sauvest.applicationName}/swagger-ui.html
+
+jwt:
+  expiration-time: 6000s
+  secret: secret
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /${sauvest.applicationName}/monitor
+

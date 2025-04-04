@@ -1,0 +1,14 @@
+<div class="grid grid-cols-6 mt-20 md:mx-24 lg:mx-96 gap-2 md">
+    <app-navigation-bar class="bg-white rounded-md p-2 col-start-1 col-end-2"></app-navigation-bar>
+    <div *ngIf="loading" class="bg-white rounded-md p-2 col-start-2 col-end-7 flex space-x-4 justify-between w-full ">
+        <div class="flex w-full justify-center p-2">
+            <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+                style="border-top-color: gray;" 
+                viewBox="0 0 24 24">
+            </svg>
+          </div>
+    </div>
+    <div *ngIf="!loading" class="bg-white rounded-md p-2 col-start-2 col-end-7">
+        
+    </div>
+</div>

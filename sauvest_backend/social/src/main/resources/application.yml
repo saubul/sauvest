@@ -1,0 +1,69 @@
+sauvest:
+  applicationName: sauvest-social
+
+grpc:
+  server:
+    port: -1
+    security:
+      enabled: false
+  client:
+    sauvest-market:
+      address: static://localhost:9082
+      negotiationType: plaintext
+
+sso-token: t.Dr4d5YZJ8B1sVJObcSC_utQkWKnVTmEvvnYutj6u2lpWClxe-oBSA8aWvLBnLcCEull9zFMglf1TcgpfZGbV4g
+
+spring:
+  application:
+    name: ${sauvest.applicationName}
+  datasource:
+    url: jdbc:postgresql://localhost:5450/sauvestdb?currentSchema=social
+    username: social
+    password: social
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: social
+  liquibase:
+    change-log: classpath:db/changelog/social-cumulative.xml
+    enabled: true
+    default-schema: social
+  kafka:
+    bootstrap-servers: localhost:9192
+    properties:
+      schema.registry.url: http://localhost:9300
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+
+integrations:
+  kafka:
+    auth:
+      group-id: social
+      topics:
+        user-register: sauvest.auth.user-register
+
+springdoc:
+  api-docs:
+    path: /${sauvest.applicationName}/api-docs
+  swagger-ui:
+    url: /${sauvest.applicationName}/api-docs
+    path: /${sauvest.applicationName}/swagger-ui.html
+
+jwt:
+  expiration-time: 600s
+  secret: secret
+
+message-broker:
+  host: rabbitmq
+  port: 61613
+  login: admin
+  password: admin
+

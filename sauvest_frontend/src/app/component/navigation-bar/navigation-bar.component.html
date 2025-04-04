@@ -1,0 +1,28 @@
+<div class = "flex flex-col font-sans mb-4 justify-between h-full">
+    <div class = "flex flex-col space-y-2">
+        <a routerLink="/user/{{username}}/profile" class="text-md flex items-center rounded-md hover:bg-gray-100 focus:hover:bg-gray-200">
+            <img [src]="img_src + 'profile.png'" alt="image" class="object-cover h-4 w-4 mx-2 rounded-full"/> 
+            <p class="" (click)="nagivateToUserProfile()">Профиль</p>
+        </a>
+        <a routerLink="/user/{{username}}/news" class="text-md flex items-center rounded-md hover:bg-gray-100 focus:hover:bg-gray-200">
+            <img [src]="img_src + 'news.jpg'" alt="image" class="object-cover h-4 w-4 mx-2 rounded-full"/> 
+            Новости
+        </a>
+        <a routerLink="/user/{{username}}/subscriptions" class="text-md flex items-center rounded-md hover:bg-gray-100 focus:hover:bg-gray-200">
+            <img [src]="img_src + 'subscription.png'" alt="image" class="object-cover h-4 w-4 mx-2 rounded-full"/> 
+            Подписки
+        </a>
+        <a routerLink="/user/{{username}}/chats" class="text-md flex items-center rounded-md hover:bg-gray-100 focus:hover:bg-gray-200">
+            <img [src]="img_src + 'messages.jpg'" alt="image" class="object-cover h-4 w-4 mx-2 rounded-full"/> 
+            Сообщения
+        </a>
+        <a routerLink="/instruments" class="text-md flex items-center rounded-md hover:bg-gray-100 focus:hover:bg-gray-200">
+            <img [src]="img_src + 'instrument.png'" alt="image" class="object-cover h-4 w-4 mx-2 rounded-full"/> 
+            Ценные бумаги
+        </a>
+    </div>
+        <button class ="" (click)="goTop()">
+            <fa-icon class = "text-gray-400" [icon]="topArrow"></fa-icon>
+        </button>
+
+</div>

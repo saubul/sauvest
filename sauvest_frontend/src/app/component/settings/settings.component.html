@@ -1,0 +1,27 @@
+<div class="flex flex-row">
+    <div *ngIf = "!loading" class = "flex space-x-4 items-start justify-between w-full mt-2">
+        <div class = "flex flex-row w-full">
+            <img [src]="profile_img_src" class = "rounded-full w-36 h-36 ml-4 border p-1 object-cover cursor-pointer" (click)="profileImageClicked()"/>
+            <input class = "file-input" id="imageUploadInput"
+                type="file" (change)="uploadImage($event)" accept="image/png, image/jpeg" >
+                
+            <form [formGroup]="updateUserFormGroup" class = "flex flex-col ml-4 w-full" (ngSubmit)="updateUser()">
+                <label for="name" class="block mb-1 text-sm font-medium text-gray-900 ">Имя</label>
+                <input formControlName="name" id="name" [ngModel]="userModel?.name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg flex w-1/2 p-2 mb-1"/>
+                <label for="name" class="block mb-1 text-sm font-medium text-gray-900 ">Фамилия</label>
+                <input formControlName="surname" id="surname" [ngModel]="userModel?.surname"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg flex w-1/2 p-2 mb-1"/>
+                <label for="name" class="block mb-1 text-sm font-medium text-gray-900">SSOToken</label>
+                <input formControlName="ssoToken" id="ssoToken"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg flex w-1/2 p-2 mb-1"/>
+                <button class="w-1/2 text-white bg-gray-800 hover:bg-gray-600 focus:outline-none rounded-lg font-medium p-2 my-1">
+                    Обновить
+                </button>
+            </form>
+        </div>
+        <a routerLink="/user/{{userModel?.username}}/profile" class="p-2 font-sans text-sm border rounded-md bg-gray-50 hover:bg-gray-100 flex" >
+            <img src="/assets/img/settings.png" class = "w-4 h-4">
+        </a>
+    </div>
+</div>

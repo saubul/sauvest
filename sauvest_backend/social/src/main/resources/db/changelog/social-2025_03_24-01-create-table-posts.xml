@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-posts" author="nrr">
+        <createTable tableName="posts">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="content" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="img_path" type="varchar(255)"/>
+            <column name="vote_count" type="bigint" defaultValue="0"/>
+            <column name="user_id" type="bigint">
+                <constraints referencedTableName="users"
+                             foreignKeyName="users_id_fk"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-sequence-posts_id_seq" author="nrr">
+        <createSequence sequenceName="posts_id_seq"
+                        startValue="1"
+                        incrementBy="1"
+        />
+    </changeSet>
+
+</databaseChangeLog>

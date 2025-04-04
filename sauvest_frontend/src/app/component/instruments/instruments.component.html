@@ -1,0 +1,79 @@
+<div class="grid grid-cols-6 mt-20 md:mx-24 lg:mx-96 gap-2 md">
+    <app-navigation-bar class="bg-white rounded-md p-2 col-start-1 col-end-2"></app-navigation-bar>
+    <div *ngIf="loading" class="bg-white rounded-md p-2 col-start-2 col-end-7 flex space-x-4 justify-between w-full ">
+        <div class="flex w-full justify-center p-2">
+            <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+                style="border-top-color: gray;" 
+                viewBox="0 0 24 24">
+            </svg>
+          </div>
+    </div>
+
+    <div *ngIf="!loading" class="bg-white rounded-md p-2 col-start-2 col-end-7">
+        <form class="mb-1 bg-white p-2 rounded-md" [formGroup]="findInstrumentsFormGroup" (ngSubmit)="findInstruments()">
+            <label for="default-search"
+                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Поиск</label>
+            <div class="relative">
+                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input type="search" id="default-search"
+                    class="focus:outline-none w-full block p-3 pl-10 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300  dark:placeholder-gray-400 dark:text-white "
+                    placeholder="Поиск по FIGI/TICKER" formControlName="content">
+                <button type="submit"
+                    class="text-white absolute right-2 bottom-2 bg-gray-800 hover:bg-gray-600 focus:ring-1 focus:ring-black focus:outline-none  font-medium rounded-lg text-sm px-3 py-1">
+                    Поиск
+                </button>
+            </div>
+        </form>
+        <div class="mb-1 bg-white p-2 rounded-md flex w-full justify-between">
+            <div class = "flex">
+                <button class = "border focus:outline-none  font-semibold p-2 mr-2 rounded-2xl"
+                        [ngClass]="{'text-white bg-gray-800': isShowShares, 'text-black hover:bg-gray-600 focus:hover:bg-gray-700 hover:text-white': !isShowShares}"
+                        (click)="showShares()">
+                    Акции
+                </button>
+                <button class = "border  focus:outline-none  font-semibold p-2 rounded-2xl"
+                        [ngClass]="{'text-white bg-gray-800': isShowBonds, 'text-black hover:bg-gray-600 focus:hover:bg-gray-700 hover:text-white': !isShowBonds}"
+                        (click)="showBonds()">
+                    Облигации
+                </button>
+            </div>
+        </div>
+        <div *ngIf="notFound" class = "p-2">
+            Инструментов не найдено.
+        </div>
+        <div *ngIf="!notFound">
+            <div class = "w-full" *ngFor="let instrument of instruments | paginate: {id: 'instrumentsPagination', itemsPerPage: 10, currentPage: p }">
+                <div class = "flex flex-row rounded hover:bg-gray-100 cursor-pointer p-1 mb-2 space-x-4" (click)="goToInstrument(instrument.figi, instrument.instrumentType)">
+                    <img [src]="img_src + 'instrument.png'" class="rounded-full w-36 h-36 ml-4 border p-1 object-contain" />
+                    <div class = "flex flex-col justify-center">
+                        <div> 
+                            <label class = "font-semibold">Название: </label> {{instrument?.name}} 
+                        </div>
+                        <div> 
+                            <label class = "font-semibold">Тикер: </label> {{instrument?.ticker}} 
+                        </div>
+                        <div> 
+                            <label class = "font-semibold">FIGI: </label> {{instrument?.figi}} 
+                        </div>
+                        <div> 
+                            <label class = "font-semibold">Биржа: </label> {{instrument?.classCode}} 
+                        </div>
+                        <div> 
+                            <label class = "font-semibold">Тип инструмента: </label> {{instrument?.instrumentType}} 
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            <div class = "flex w-full justify-end">
+                <pagination-controls id="instrumentsPagination" previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-votes" author="nrr">
+        <createTable tableName="votes">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="post_id" type="bigint">
+                <constraints referencedTableName="posts"
+                             referencedColumnNames="id"
+                             foreignKeyName="posts_id_fk"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="users_id_fk"/>
+            </column>
+        </createTable>
+
+        <createSequence
+                sequenceName="votes_id_seq"
+                startValue="1"
+                incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

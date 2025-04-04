@@ -1,0 +1,220 @@
+version: '3.8'
+
+services:
+  sauvest-auth:
+    image: sauvest-auth:latest
+    container_name: sauvest-auth
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+      - "5006:5006"
+    volumes:
+      - ./sauvest/auth/application.yml:/app/config/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
+    networks:
+      - postgres
+      - monitoring
+      - kafka
+
+  sauvest-social:
+    image: sauvest-social:latest
+    container_name: sauvest-social
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8081:8080"
+      - "5005:5005"
+    volumes:
+      - ./sauvest/social/application.yml:/app/config/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    networks:
+      - postgres
+      - monitoring
+      - rabbitmq
+      - kafka
+
+  sauvest-market:
+    image: sauvest-market:latest
+    container_name: sauvest-market
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8082:8080"
+      - "5007:5007"
+    volumes:
+      - ./sauvest/market/application.yml:/app/config/application.yml
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007"
+    networks:
+      - postgres
+      - monitoring
+      - rabbitmq
+      - kafka
+
+  postgres:
+    image: postgres:17.4
+    container_name: postgres
+    ports:
+      - "5450:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01.sql
+    networks:
+      - postgres
+
+  rabbitmq:
+    image: pcloud/rabbitmq-stomp:latest
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+      - "61613:61613"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_stomp tcp_listeners [61613]"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rabbitmq
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_container
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=miraxle@yandex.ru
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    depends_on:
+      - postgres
+    ports:
+      - "5451:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka
+
+  kafka-broker-1:
+    image: confluentinc/cp-server:7.4.0
+    hostname: kafka-broker-1
+    container_name: kafka-broker-1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9192:9092"
+      - "29092:29092"
+      - "9201:9101"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_REPLICATION_FACTOR: 1
+      CONFLUENT_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+    networks:
+      - kafka
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.4.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka-broker-1
+    ports:
+      - 9300:8081
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: localhost
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka-broker-1:9092
+      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+    networks:
+      - kafka
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:master
+    ports:
+      - 9200:8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kafka-broker-1
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-broker-1:9092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8181
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    depends_on:
+      - kafka-broker-1
+      - schema-registry
+    networks:
+      - kafka
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+
+networks:
+  postgres:
+    driver: bridge
+  monitoring:
+    driver: bridge
+  rabbitmq:
+    driver: bridge
+  kafka:
+    driver: bridge

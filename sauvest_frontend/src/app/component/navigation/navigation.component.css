@@ -1,0 +1,22 @@
+.button-link, .sign-up{    
+    border-color: #ffffff;
+    color: #ffffff;
+    fill: black;
+    border: 1px solid;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    line-height: 30px;
+    padding: 6px 16px;
+    opacity: 1;
+}
+
+.sign-up {
+    border-color: #ffffff;
+    color: black;
+}

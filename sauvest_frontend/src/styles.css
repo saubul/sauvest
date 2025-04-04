@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.fadeInText {
+    animation: fadein 1s;
+}
+
+.fadeInText3s {
+    animation: fadein 3s;
+}
+
+.fadeInImage {
+    animation: fadein 2s;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

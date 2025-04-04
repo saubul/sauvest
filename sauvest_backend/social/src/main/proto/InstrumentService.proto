@@ -1,0 +1,23 @@
+syntax = "proto3";
+package ru.sauvest.grpc.market;
+
+message SsoTokenRequest {
+  string ssoToken = 1;
+}
+
+message Instrument {
+  string name = 1;
+  string figi = 2;
+  string isin = 3;
+  string ticker = 4;
+  string classCode = 5;
+  string instrumentType = 6;
+}
+
+message GetAllInstrumentsResponse {
+  repeated Instrument instruments = 1;
+}
+
+service InstrumentService {
+  rpc getAllInstruments(SsoTokenRequest) returns (GetAllInstrumentsResponse);
+}

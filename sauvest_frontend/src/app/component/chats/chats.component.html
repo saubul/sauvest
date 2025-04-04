@@ -1,0 +1,80 @@
+<div *ngIf="loading" class="flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+  <div class="flex w-full justify-center p-2">
+    <svg class="animate-spin h-8 w-8 rounded-full bg-transparent border-2 border-transparent border-opacity-50" 
+      style="border-top-color: gray;" 
+      viewBox="0 0 24 24">
+    </svg>
+  </div>
+</div>
+<div *ngIf="!loading && !(chats && chats?.length !== 0)"
+  class="flex space-x-4 items-center justify-between w-full bg-white rounded-md p-2">
+  <div>
+    <p class="text-xl">Найти собеседников.</p>
+    <a routerLink="/user/{{userModel?.username}}/subscriptions" class=" bg-gray-200 hover:bg-gray-300 p-1 rounded-md"
+      type="submit">
+      Подписки
+    </a>
+  </div>
+</div>
+<div *ngIf="!loading && chats && chats?.length !== 0" class="container mx-auto rounded-lg">
+  <div class="flex flex-row justify-between bg-white">
+    <!-- ЧАТЫ -->
+    <div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+      <button *ngFor="let chat of chats"
+        class="flex flex-row py-4 px-2 justify-center items-center border-b-2 hover:bg-gray-100"
+        (click)="showChatMessagesAndSubscribe(chat)" [ngClass]="chosenChatId === chat.id? 'bg-gray-100': ''">
+        <div class="w-1/4">
+          <div *ngFor="let username of chat.usersUsername">
+            <div *ngIf="username !== userModel?.username">{{username}}</div>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <div class="w-full px-5 flex flex-col justify-between">
+      <div class="flex mt-5">
+        <cdk-virtual-scroll-viewport itemSize="48" class="flex justify-end h-[36rem] w-full scrollbar-hide">
+
+          <div *cdkVirtualFor="let message of messages">
+
+            <div *ngIf="message.username === userModel?.username" class="flex justify-end mb-4">
+              <div
+                class="mr-2 py-3 px-4 bg-gray-400 rounded-bl-3xl rounded-br-3xl rounded-tr-3xl rounded-tl-3xl text-white">
+                {{message.content}}
+              </div>
+              <div class="mx-2 px-1 flex items-center">
+                <a routerLink="/user/{{message.username}}/profile">
+                  <img [src]="usersPhotos.get(message.username)" class="rounded-full w-10 h-10 object-cover">
+                </a>
+              </div>
+            </div>
+
+            <div *ngIf="message.username !== userModel?.username" class="flex justify-start mb-4">
+              <div class="mx-2 px-1 flex items-center">
+                <a routerLink="/user/{{message.username}}/profile">
+                  <img [src]="usersPhotos.get(message.username)" class="rounded-full w-10 h-10 object-cover">
+                </a>
+              </div>
+              <div
+                class="mr-2 py-3 px-4 bg-gray-400 rounded-bl-3xl rounded-br-3xl rounded-tr-3xl rounded-tl-3xl text-white">
+                {{message.content}}
+              </div>
+            </div>
+
+          </div>
+
+        </cdk-virtual-scroll-viewport>
+
+      </div>
+      <div class="py-5">
+        <form class="flex" [formGroup]="sendMessageForm" (ngSubmit)="sendMessage()">
+          <input id="message" class="w-full bg-gray-50 hover:bg-gray-100 py-3 px-3 rounded-xl focus:outline-none" type="text"
+            placeholder="..." formControlName="message" required autofocus/>
+          <button class="ml-2 bg-gray-200 hover:bg-gray-300 py-3 px-3 rounded-xl" type="submit">
+            Отправить
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

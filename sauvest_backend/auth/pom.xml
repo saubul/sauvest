@@ -27,6 +27,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ru.sauvest</groupId>
+            <artifactId>logging</artifactId>
+            <version>SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

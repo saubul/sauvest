@@ -1,0 +1,11 @@
+{
+  "name": "LogMessage",
+  "type": "record",
+  "namespace": "ru.sauvest.kafka.avro.model.LogMessage",
+  "fields": [
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}
